@@ -1,0 +1,19 @@
+{
+  "name": "@avaion/utils",
+  "version": "0.0.0",
+  "description": "node package of common avaion utilities",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thompsgr/utils.git"
+  },
+  "author": "Geoff Thompson <geoff@avaion.com> (http://www.avaion.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thompsgr/utils/issues"
+  },
+  "homepage": "https://github.com/thompsgr/utils#readme"
+}
