@@ -2,6 +2,8 @@
 // counter object - approximates use of associative arrays for counting in php 
 function counter(desc) {
 
+    var columnar = true;
+
     // must have description
     if (desc === undefined) {
         return -1;
@@ -12,6 +14,9 @@ function counter(desc) {
 
     // increment counter for an item
     function increment(item) {
+        if (columnar && isNaN(item)) {
+            columnar = false;
+        }
         if (obj.hasOwnProperty(item)) {
             obj[item] += 1;
         } else {
@@ -22,13 +27,31 @@ function counter(desc) {
 
     // array of counter items in sorted order
     function items() {
-        // sort items alphabetically
         let items = [];
-        Object.keys(obj)
-              .sort()
-              .forEach(function(v, i) {
-                  items.push({ item: v, count: obj[v]});
-              });
+        if (columnar) {
+            // first determine max column
+            var columns = Object.keys(obj);
+            if (columns.length > 0) {
+                var max = columns.sort(function(a, b) { return b - a })[0];
+                // initialize sparase array from 0 to max - 1
+                for (var i = 0; i <= max; i++) {
+                    items.push({item: i, count: 0});
+                }
+                var ii;
+                columns.forEach(function(v, i) {
+                    ii = parseInt(v);
+                    items[ii] = { item: v, count: obj[v] };
+                });
+            }
+        }
+        else {
+            // sort items alphabetically
+            Object.keys(obj)
+                  .sort()
+                  .forEach(function(v, i) {
+                      items.push({ item: v, count: obj[v]});
+                  });
+        }
         return items;
     }
 
