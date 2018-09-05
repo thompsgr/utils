@@ -72,7 +72,7 @@ describe('counter()', function() {
             assert.equal(mycounter.log(),'New Item: \nA: 1 \nB: 2 \n');
         });
     });
-    describe.skip('skip', function() {
+    describe('skip', function() {
         it('should return pending', function() {
             throw new Error("fail");
         });
