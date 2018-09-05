@@ -43,7 +43,16 @@ describe('counter()', function() {
             mycounter.increment('C');
             assert.equal(mycounter.log(),'New Item: \nA: 1 \nB: 1 \nC: 1 \nD: 1 \n');
         });
-        it('should return columnar array', function() {
+        it('should return dense columnar array', function() {
+            mycounter.increment('0');
+            mycounter.increment('11');
+            mycounter.increment('1');
+            mycounter.increment('3');
+            mycounter.increment('33');
+            assert.equal(mycounter.items().length,5);
+        });
+        it('should return sparse columnar array', function() {
+            mycounter.sparse(true);
             mycounter.increment('0');
             mycounter.increment('11');
             mycounter.increment('1');

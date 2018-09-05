@@ -2,7 +2,8 @@
 // counter object - approximates use of associative arrays for counting in php 
 function counter(desc) {
 
-    var columnar = true;
+    // default to dense array
+    var p_sparse = false;
 
     // must have description
     if (desc === undefined) {
@@ -14,21 +15,28 @@ function counter(desc) {
 
     // increment counter for an item
     function increment(item) {
-        if (columnar && isNaN(item)) {
-            columnar = false;
-        }
         if (obj.hasOwnProperty(item)) {
             obj[item] += 1;
         } else {
             obj[item] = 1;
+            // override sparse if new item is not a number
+            if (p_sparse && isNaN(item)) {
+                p_sparse =  false;
+            }
         }
         return obj[item];
+    }
+
+    function sparse(bool) {
+        if (bool) {
+            p_sparse = bool;
+        }
     }
 
     // array of counter items in sorted order
     function items() {
         let items = [];
-        if (columnar) {
+        if (p_sparse) {
             // first determine max column
             var columns = Object.keys(obj);
             if (columns.length > 0) {
@@ -64,6 +72,7 @@ function counter(desc) {
         return s;
     }
     return {
+        sparse: sparse,
         increment: increment,
         items: items,
         log: log
