@@ -64,17 +64,27 @@ describe('counter()', function() {
         });
         it('should return sparse columnar array', function() {
             mycounter.sparse(true);
-            mycounter.increment('0');
-            mycounter.increment('11');
-            mycounter.increment('1');
-            mycounter.increment('3');
-            mycounter.increment('33');
+            mycounter.increment(0);
+            mycounter.increment(11);
+            mycounter.increment(1);
+            mycounter.increment(3);
+            mycounter.increment(33);
             assert.equal(mycounter.items().length,34);
         });
     });
     describe('log', function() {
         it('should return description with no items', function() {
             assert.equal(mycounter.log(),'New Item: \n');
+        });
+        it('should return description with sparse integer items (right-padded)', function() {
+            mycounter.sparse(true);
+            mycounter.increment(1);
+            mycounter.increment(3);
+            mycounter.increment(3);
+            mycounter.increment(3);
+            mycounter.increment(3);
+            mycounter.increment(3);
+            assert.equal(mycounter.log(), 'New Item: \n0...: 0 \n1...: 1 \n2...: 0 \n3...: 5 \n');
         });
         it('should return description with items (right-padded)', function() {
             mycounter.increment('A');

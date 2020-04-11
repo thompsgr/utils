@@ -36,19 +36,18 @@ function counter(desc) {
     // array of counter items in sorted order
     function items() {
         let items = [];
-        if (p_sparse) {
+        // allow sparse only if all object properties are integers and there are less than 1,000
+        if (p_sparse && Object.keys(obj).every(function(el) { return typeof el === 'string' && !isNaN(el) && Number.isInteger(parseFloat(el)) && el < 1000; })) {
             // first determine max column
             var columns = Object.keys(obj);
             if (columns.length > 0) {
                 var max = columns.sort(function(a, b) { return b - a })[0];
-                // initialize sparase array from 0 to max - 1
+                // initialize sparse array from 0 to max - 1
                 for (var i = 0; i <= max; i++) {
                     items.push({item: i, count: 0});
                 }
-                var ii;
                 columns.forEach(function(v, i) {
-                    ii = parseInt(v);
-                    items[ii] = { item: v, count: obj[v] };
+                    items[v] = { item: v, count: obj[v] };
                 });
             }
         }
@@ -70,12 +69,15 @@ function counter(desc) {
         if (columns.length > 0) {
             var longest = columns.reduce(function(a, b) { return a.length > b.length ? a : b });
             var pad_length = longest.length + 3;
+            var label = '';
             items().forEach(function(v, i) {
-                s += `${v.item.padEnd(pad_length,'.')}: ${v.count} \n`;
+                label = (typeof(v.item) === 'string') ? v.item : v.item.toString() ;
+                s += `${label.padEnd(pad_length,'.')}: ${v.count} \n`;
             });
         }
         return s;
     }
+
     return {
         sparse: sparse,
         increment: increment,
