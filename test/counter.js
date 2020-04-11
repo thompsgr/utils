@@ -79,12 +79,10 @@ describe('counter()', function() {
         it('should return description with sparse integer items (right-padded)', function() {
             mycounter.sparse(true);
             mycounter.increment(1);
-            mycounter.increment(3);
-            mycounter.increment(3);
-            mycounter.increment(3);
-            mycounter.increment(3);
-            mycounter.increment(3);
-            assert.equal(mycounter.log(), 'New Item: \n0...: 0 \n1...: 1 \n2...: 0 \n3...: 5 \n');
+            for (var i = 0; i < 100; i++) {
+                mycounter.increment(3);
+            }
+            assert.equal(mycounter.log(), 'New Item: \n0...:   0 \n1...:   1 \n2...:   0 \n3...: 100 \n');
         });
         it('should return description with items (right-padded)', function() {
             mycounter.increment('A');

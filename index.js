@@ -44,7 +44,7 @@ function counter(desc) {
                 var max = columns.sort(function(a, b) { return b - a })[0];
                 // initialize sparse array from 0 to max - 1
                 for (var i = 0; i <= max; i++) {
-                    items.push({item: i, count: 0});
+                    items.push({item: i.toString(), count: 0});
                 }
                 columns.forEach(function(v, i) {
                     items[v] = { item: v, count: obj[v] };
@@ -62,17 +62,21 @@ function counter(desc) {
         return items;
     }
 
+    function formatCount(int) {
+        return int.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
     // print items to console
     function log() {
         let s = `${desc}: \n`;
         var columns = Object.keys(obj);
         if (columns.length > 0) {
-            var longest = columns.reduce(function(a, b) { return a.length > b.length ? a : b });
-            var pad_length = longest.length + 3;
-            var label = '';
+            var longest_label = columns.reduce(function(a, b) { return a.length > b.length ? a : b });
+            var highest_count = Object.values(obj).reduce(function(a, b) { return a > b ? a : b });
+            var label_length = longest_label.length + 3;
+            var count_length = formatCount(highest_count).length;
             items().forEach(function(v, i) {
-                label = (typeof(v.item) === 'string') ? v.item : v.item.toString() ;
-                s += `${label.padEnd(pad_length,'.')}: ${v.count} \n`;
+                s += `${v.item.padEnd(label_length,'.')}: ${formatCount(v.count).padStart(count_length,' ')} \n`;
             });
         }
         return s;
