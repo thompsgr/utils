@@ -66,9 +66,14 @@ function counter(desc) {
     // print items to console
     function log() {
         let s = `${desc}: \n`;
-        items().forEach(function(v, i) {
-            s += `${v.item}: ${v.count} \n`;
-        });
+        var columns = Object.keys(obj);
+        if (columns.length > 0) {
+            var longest = columns.reduce(function(a, b) { return a.length > b.length ? a : b });
+            var pad_length = longest.length + 3;
+            items().forEach(function(v, i) {
+                s += `${v.item.padEnd(pad_length,'.')}: ${v.count} \n`;
+            });
+        }
         return s;
     }
     return {
