@@ -101,6 +101,16 @@ describe('counter()', function() {
             mycounter.increment('B');
             assert.equal(mycounter.logFillRates(3), 'New Item: \nA...: 66.67% \nB...: 33.33% \n' );
         });
+        it('should map labels and display percentage when labels are provided', function() {
+            var mySparseCounter = utils.counter('Sparse Counter', true);
+            mySparseCounter.increment(1);
+            mySparseCounter.increment(2);
+            mySparseCounter.increment(2);
+            mySparseCounter.increment(2);
+            mySparseCounter.increment(2);
+            var labels = {0: 'A', 1: 'B', 2: 'C', 3: 'DDD'};
+            assert.equal(mySparseCounter.logFillRates(4,labels), 'Sparse Counter: \nA...:   0.00% \nB...:  25.00% \nC...: 100.00% \n' );
+        });
     });
     describe.skip('skip', function() {
         it('should return pending', function() {

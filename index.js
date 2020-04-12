@@ -72,7 +72,17 @@ function counter(desc = 'Counter', sparse = false) {
         return s;
     }
 
-    function logFillRates(total) {
+    function label(items,labels) {
+        let labeled = [], current = '';
+        items.forEach(function(v, i) {
+            current = v.item;
+            v.item = labels[current];
+            labeled.push(v);
+        });
+        return labeled;
+    }
+
+    function logFillRates(total, labels = 'none') {
         if (typeof(total) === 'undefined') {
             return -1;
         }
@@ -83,7 +93,14 @@ function counter(desc = 'Counter', sparse = false) {
             var highest_count = Object.values(obj).reduce(function(a, b) { return a > b ? a : b });
             var label_length = longest_label.length + 3;
             var count_length = formatPercent(highest_count,total).length;
-            items().forEach(function(v, i) {
+            var labeled = [];
+            if (labels === 'none') {
+                labeled = items();
+            }
+            else {
+                labeled = label(items(), labels);
+            }
+            labeled.forEach(function(v, i) {
                 s += `${v.item.padEnd(label_length,'.')}: ${formatPercent(v.count,total).padStart(count_length,' ')} \n`;
             });
         }
