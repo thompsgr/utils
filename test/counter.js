@@ -8,9 +8,6 @@ describe('counter()', function() {
     });
 
     describe('constructor', function() {
-        it('should return -1 when no text description is provided', function() {
-            assert.equal(utils.counter(), -1);
-        });
         it('should return object with increment, items and log methods', function() {
             assert.equal(typeof mycounter, 'object');
             assert.equal(typeof mycounter.increment, 'function');
@@ -63,13 +60,13 @@ describe('counter()', function() {
             assert.equal(mycounter.items().length,5);
         });
         it('should return sparse columnar array', function() {
-            mycounter.sparse(true);
-            mycounter.increment(0);
-            mycounter.increment(11);
-            mycounter.increment(1);
-            mycounter.increment(3);
-            mycounter.increment(33);
-            assert.equal(mycounter.items().length,34);
+            var mySparseCounter = utils.counter('Sparse Counter',true);
+            mySparseCounter.increment(0);
+            mySparseCounter.increment(11);
+            mySparseCounter.increment(1);
+            mySparseCounter.increment(3);
+            mySparseCounter.increment(33);
+            assert.equal(mySparseCounter.items().length,34);
         });
     });
     describe('log', function() {
@@ -77,18 +74,32 @@ describe('counter()', function() {
             assert.equal(mycounter.log(),'New Item: \n');
         });
         it('should return description with sparse integer items (right-padded)', function() {
-            mycounter.sparse(true);
-            mycounter.increment(1);
+            var mySparseCounter = utils.counter('Sparse Counter',true);
+            mySparseCounter.increment(1);
             for (var i = 0; i < 100; i++) {
-                mycounter.increment(3);
+                mySparseCounter.increment(3);
             }
-            assert.equal(mycounter.log(), 'New Item: \n0...:   0 \n1...:   1 \n2...:   0 \n3...: 100 \n');
+            assert.equal(mySparseCounter.log(), 'Sparse Counter: \n0...:   0 \n1...:   1 \n2...:   0 \n3...: 100 \n');
         });
         it('should return description with items (right-padded)', function() {
             mycounter.increment('A');
             mycounter.increment('BB');
             mycounter.increment('BB');
             assert.equal(mycounter.log(),'New Item: \nA....: 1 \nBB...: 2 \n');
+        });
+    });
+    describe('logFillRates', function() {
+        it('should fail with -1 if total not supplied', function() {
+            mycounter.increment('A');
+            mycounter.increment('A');
+            mycounter.increment('B');
+            assert.equal(mycounter.logFillRates(), -1 );
+        });
+        it('should calculate and display percentage of provided total for each item', function() {
+            mycounter.increment('A');
+            mycounter.increment('A');
+            mycounter.increment('B');
+            assert.equal(mycounter.logFillRates(3), 'New Item: \nA...: 66.67% \nB...: 33.33% \n' );
         });
     });
     describe.skip('skip', function() {

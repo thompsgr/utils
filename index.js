@@ -1,14 +1,6 @@
 
 // counter object - approximates use of associative arrays for counting in php 
-function counter(desc) {
-
-    // default to dense array
-    var p_sparse = false;
-
-    // must have description
-    if (desc === undefined) {
-        return -1;
-    }
+function counter(desc = 'Counter', sparse = false) {
 
     // use javascript object properties to track items
     let obj = {};
@@ -20,24 +12,18 @@ function counter(desc) {
         } else {
             obj[item] = 1;
             // override sparse if new item is not a number
-            if (p_sparse && isNaN(item)) {
-                p_sparse =  false;
+            if (sparse && isNaN(item)) {
+                sparse =  false;
             }
         }
         return obj[item];
-    }
-
-    function sparse(bool) {
-        if (bool) {
-            p_sparse = bool;
-        }
     }
 
     // array of counter items in sorted order
     function items() {
         let items = [];
         // allow sparse only if all object properties are integers and there are less than 1,000
-        if (p_sparse && Object.keys(obj).every(function(el) { return typeof el === 'string' && !isNaN(el) && Number.isInteger(parseFloat(el)) && el < 1000; })) {
+        if (sparse && Object.keys(obj).every(function(el) { return typeof el === 'string' && !isNaN(el) && Number.isInteger(parseFloat(el)) && el < 1000; })) {
             // first determine max column
             var columns = Object.keys(obj);
             if (columns.length > 0) {
@@ -66,6 +52,10 @@ function counter(desc) {
         return int.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
 
+    function formatPercent(int,total) {
+        return parseFloat(int * 100 / total).toFixed(2)+"%";
+    }
+
     // print items to console
     function log() {
         let s = `${desc}: \n`;
@@ -82,11 +72,29 @@ function counter(desc) {
         return s;
     }
 
+    function logFillRates(total) {
+        if (typeof(total) === 'undefined') {
+            return -1;
+        }
+        let s = `${desc}: \n`;
+        var columns = Object.keys(obj);
+        if (columns.length > 0) {
+            var longest_label = columns.reduce(function(a, b) { return a.length > b.length ? a : b });
+            var highest_count = Object.values(obj).reduce(function(a, b) { return a > b ? a : b });
+            var label_length = longest_label.length + 3;
+            var count_length = formatPercent(highest_count).length;
+            items().forEach(function(v, i) {
+                s += `${v.item.padEnd(label_length,'.')}: ${formatPercent(v.count,total).padStart(count_length,' ')} \n`;
+            });
+        }
+        return s;
+    }
+
     return {
-        sparse: sparse,
         increment: increment,
         items: items,
-        log: log
+        log: log,
+        logFillRates: logFillRates
     }
 }
 module.exports.counter = counter;
