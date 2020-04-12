@@ -82,7 +82,7 @@ function counter(desc = 'Counter', sparse = false) {
             var longest_label = columns.reduce(function(a, b) { return a.length > b.length ? a : b });
             var highest_count = Object.values(obj).reduce(function(a, b) { return a > b ? a : b });
             var label_length = longest_label.length + 3;
-            var count_length = formatPercent(highest_count).length;
+            var count_length = formatPercent(highest_count,total).length;
             items().forEach(function(v, i) {
                 s += `${v.item.padEnd(label_length,'.')}: ${formatPercent(v.count,total).padStart(count_length,' ')} \n`;
             });
